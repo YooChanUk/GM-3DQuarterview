@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     bool jDown;//점프버튼 변수
 
     bool isJump; //지금 점프를 하는지에대해 검사하는 변수
+    bool isDodge;
 
     Vector3 moveVec;
     Animator anim;//자식관계에서 활동중 컴포넌트 차일드 활용
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
         Move();
         Turn();
         Jump();
+        Dodge();
     }
 
     void GetInput()
@@ -56,11 +58,31 @@ public class Player : MonoBehaviour
 
     void Jump()
     { 
-        if (jDown && !isJump)
+        if (jDown && moveVec == Vector3.zero && !isJump && !isDodge)
         {
-            rigid.AddForce(Vector3.up * 15, ForceMode.Impulse);//임펄스는 즉발적인 힘
+            rigid.AddForce(Vector3.up * 20, ForceMode.Impulse);//임펄스는 즉발적인 힘
+            anim.SetBool("isJump", true);
+            anim.SetTrigger("doJump");
             isJump = true;
         }
+    }
+
+    void Dodge()
+    {
+        if (jDown && moveVec != Vector3.zero && !isJump && !isDodge)
+        {
+            Speed *= 2;
+            anim.SetTrigger("doDodge");
+            isDodge = true;
+
+            Invoke("DodgeOut",0.5f);
+        }
+    }
+
+    void DodgeOut()
+    {
+        Speed *= 0.5f;
+        isDodge = false;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -68,6 +90,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Floor")
         {
             isJump = false;
+            anim.SetBool("isJump", false);
         }
     }
 }
