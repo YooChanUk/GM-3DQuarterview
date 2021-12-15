@@ -5,8 +5,21 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float Speed;//캐릭터 속도 변수
-    public GameObject[] weapons;
-    public bool[] hasWeapons;
+
+    public GameObject[] weapons;//어떤 무기를 쓰는지에대해
+    public bool[] hasWeapons;//가지고 있는지에 대해
+    public GameObject[] grenades;//공전수류탄의 오브젝트
+    public int hasGrenades;//수류탄 가진 개수
+
+    public int ammo;
+    public int coin;
+    public int health;//아이템 소유확인
+    
+
+    public int maxammo;
+    public int maxcoin;
+    public int maxhealth;
+    public int maxhasGrenades;//아이템 최대개수들
 
     float hAxis;
     float vAxis;
@@ -181,6 +194,51 @@ public class Player : MonoBehaviour
         {
             isJump = false;
             anim.SetBool("isJump", false);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Item")
+        {
+            Item item = other.GetComponent<Item>();
+
+            switch (item.type)
+            {
+                case Item.Type.Ammo:
+                    ammo += item.value;
+                    if (ammo > maxammo)
+                    {
+                        ammo = maxammo;
+                    }
+                    break;
+                case Item.Type.Coin:
+                    coin += item.value;
+                    if (coin > maxcoin)
+                    {
+                        coin = maxcoin;
+                    }
+                    break;
+                case Item.Type.Heart:
+                    health += item.value;
+                    if (health > maxhealth)
+                    {
+                        health = maxhealth;
+                    }
+                    break;
+                case Item.Type.Grenade:
+                    grenades[hasGrenades].SetActive(true);
+
+                    hasGrenades += item.value;
+                    if (hasGrenades > maxhasGrenades)
+                    {
+                        hasGrenades = maxhasGrenades;
+                    }
+                    break;
+
+            }
+
+            Destroy(other.gameObject);
         }
     }
 
