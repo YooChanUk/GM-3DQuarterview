@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public Camera followCamera;
+
     public float Speed;//캐릭터 속도 변수
 
     public GameObject[] weapons;//어떤 무기를 쓰는지에대해
@@ -31,11 +33,13 @@ public class Player : MonoBehaviour
     bool sDown2;
     bool sDown3;//스왑장비 버튼 변수들
     bool fDown;//공격버튼 변수
+    bool rDown;//재장전버튼 변수
 
     bool isJump;//지금 점프를 하는지에 대해 검사하는 변수
     bool isDodge;//지금 회피를 하는지에 대해 검사하는 변수
     bool isSwap;//지금 무기를 바꾸는중인지에 대해 검사하는 변수
     bool isFireReady = true;//공격준비 완료인지 검사하는 함수
+    bool isReload; //장전중인지에 대해 검사하는 함수
 
 
     Vector3 moveVec;
@@ -63,6 +67,7 @@ public class Player : MonoBehaviour
         Turn();
         Jump();
         Attack();
+        Reload();
         Dodge();
         Swap();
         Interation();
@@ -74,7 +79,8 @@ public class Player : MonoBehaviour
         vAxis = Input.GetAxisRaw("Vertical");
         wDown = Input.GetButton("Walk");
         jDown = Input.GetButtonDown("Jump");
-        fDown = Input.GetButtonDown("Fire1");
+        fDown = Input.GetButton("Fire1");
+        rDown = Input.GetButtonDown("Reload");
         iDown = Input.GetButtonDown("Interation");
         sDown1 = Input.GetButtonDown("Swap1");
         sDown2 = Input.GetButtonDown("Swap2");
@@ -88,7 +94,7 @@ public class Player : MonoBehaviour
         {
             moveVec = dodgeVec; //고정되있던 방향으로 이동방향 고정
         }
-        if (isSwap || !isFireReady)
+        if (isSwap || isReload || !isFireReady)
         {
             moveVec = Vector3.zero;
         }
@@ -101,7 +107,22 @@ public class Player : MonoBehaviour
 
     void Turn()//누른곳으로 캐릭터가 바라보게끔 설정
     {
+        //키보드에 의한 회전
         transform.LookAt(transform.position + moveVec);
+
+        //마우스에 의한 회전
+        if (fDown)
+        {
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit rayHit;
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
+                Vector3 nextVec = rayHit.point - transform.position;
+                nextVec.y = 0;
+                transform.LookAt(transform.position + nextVec);
+            }
+        }
+
     }
 
     void Jump()
@@ -128,9 +149,41 @@ public class Player : MonoBehaviour
         if (fDown && isFireReady && !isDodge && !isSwap)
         {
             equipWeapons.Use();
-            anim.SetTrigger("doSwing");
+            anim.SetTrigger(equipWeapons.type == Weapon.Type.Melee ? "doSwing" : "doShot");
             fireDelay = 0;
         }
+    }
+
+    void Reload()
+    {
+        if (equipWeapons == null)
+        {
+            return;
+        }
+        if (equipWeapons.type == Weapon.Type.Melee)
+        {
+            return;
+        }
+        if (ammo <= 0)
+        {
+            return;
+        }
+
+        if (rDown && !isJump && !isDodge && !isSwap && isFireReady)
+        {
+            anim.SetTrigger("doReload");
+            isReload = true;
+
+            Invoke("ReloadOut",2.5f);
+        }
+    }
+
+    void ReloadOut()
+    {
+        int reAmmo = ammo < equipWeapons.maxAmmo ? ammo : equipWeapons.maxAmmo;
+        equipWeapons.curAmmo = reAmmo;
+        ammo -= reAmmo;
+        isReload = false;
     }
 
     void Dodge()

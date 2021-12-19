@@ -206,11 +206,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b604575fc957ae41be30d223431c4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 1
   damage: 0
-  rate: 0
+  rate: 0.15
+  maxAmmo: 30
+  curAmmo: 30
   meleeArea: {fileID: 0}
   trailEffect: {fileID: 0}
+  bulletPos: {fileID: 1549279650}
+  bullet: {fileID: 6342306144624154153, guid: 32617e4a9390e6341839e5143a255191, type: 3}
+  bulletCasePos: {fileID: 1951530289}
+  bulletCase: {fileID: 200065914057031553, guid: 3bf4aa42f9518354d8921ae04bfe8921, type: 3}
 --- !u!1 &226609356 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3403024553794750845, guid: 8f5e135a19626f544908fc8f156144b9, type: 3}
@@ -5164,7 +5170,7 @@ GameObject:
   - component: {fileID: 702764470}
   m_Layer: 0
   m_Name: Wall (1)
-  m_TagString: Floor
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -5744,7 +5750,7 @@ GameObject:
   - component: {fileID: 1157777585}
   m_Layer: 0
   m_Name: Wall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -5922,6 +5928,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2097157890}
   orbitSpeed: 20
+--- !u!1 &1418829276
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1418829277}
+  m_Layer: 0
+  m_Name: Case Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1418829277
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418829276}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.126, y: 0.95, z: -0.233}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1581854363}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1441893486
 GameObject:
   m_ObjectHideFlags: 0
@@ -5937,7 +5973,7 @@ GameObject:
   - component: {fileID: 1441893491}
   m_Layer: 0
   m_Name: Wall (2)
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -6218,6 +6254,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2097157890}
   orbitSpeed: 20
+--- !u!1 &1549279649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1549279650}
+  m_Layer: 0
+  m_Name: Bullet Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1549279650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549279649}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 2.5, z: 1.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2097157890}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1581854362
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6301,11 +6367,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b604575fc957ae41be30d223431c4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 0
+  type: 1
   damage: 0
-  rate: 0
+  rate: 0.4
+  maxAmmo: 7
+  curAmmo: 7
   meleeArea: {fileID: 0}
   trailEffect: {fileID: 0}
+  bulletPos: {fileID: 1549279650}
+  bullet: {fileID: 583394184200084647, guid: 16fb82298992aa04ebd21ef8366d0327, type: 3}
+  bulletCasePos: {fileID: 1418829277}
+  bulletCase: {fileID: 200065914057031553, guid: 3bf4aa42f9518354d8921ae04bfe8921, type: 3}
 --- !u!1001 &1592007467
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11235,7 +11307,7 @@ GameObject:
   - component: {fileID: 1701452199}
   m_Layer: 0
   m_Name: Wall (3)
-  m_TagString: Floor
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
@@ -11723,8 +11795,44 @@ MonoBehaviour:
   type: 0
   damage: 20
   rate: 0.5
+  maxAmmo: 0
+  curAmmo: 0
   meleeArea: {fileID: 1837529512}
   trailEffect: {fileID: 1476232819}
+  bulletPos: {fileID: 0}
+  bullet: {fileID: 0}
+  bulletCasePos: {fileID: 0}
+  bulletCase: {fileID: 0}
+--- !u!1 &1951530288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1951530289}
+  m_Layer: 0
+  m_Name: Case Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1951530289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951530288}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.13, y: 0.75, z: -0.107}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 106439877}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2050233728
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21560,6 +21668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bed4b4375d412f45b66c14c34af9076, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followCamera: {fileID: 963194227}
   Speed: 15
   weapons:
   - {fileID: 1837529511}
@@ -21572,7 +21681,7 @@ MonoBehaviour:
   - {fileID: 1717071789}
   - {fileID: 1152966501}
   hasGrenades: 0
-  ammo: 0
+  ammo: 100
   coin: 0
   health: 100
   maxammo: 999
