@@ -40,6 +40,7 @@ public class Player : MonoBehaviour
     bool isSwap;//지금 무기를 바꾸는중인지에 대해 검사하는 변수
     bool isFireReady = true;//공격준비 완료인지 검사하는 함수
     bool isReload; //장전중인지에 대해 검사하는 함수
+    bool isBorder;
 
 
     Vector3 moveVec;
@@ -98,7 +99,13 @@ public class Player : MonoBehaviour
         {
             moveVec = Vector3.zero;
         }
-        transform.position += moveVec * Speed * (wDown ? 0.3f : 1) * Time.deltaTime;//바뀐 이동방향과 속도 그리고 걷기를 눌렀는지 안눌렀는지에대해 검사하여 속도를 조정
+        if (!isBorder)
+        {
+            transform.position += 
+                moveVec * Speed * (wDown ? 0.3f : 1) * Time.deltaTime;
+            //바뀐 이동방향과 속도 그리고 걷기를 눌렀는지 안눌렀는지에대해 검사하여 속도를 조정
+        }
+        
 
 
         anim.SetBool("isRun", moveVec != Vector3.zero);
@@ -271,6 +278,23 @@ public class Player : MonoBehaviour
             isJump = false;
             anim.SetBool("isJump", false);
         }
+    }
+
+    void FreezeRotation()
+    {
+        rigid.angularVelocity = Vector3.zero;//물리 회전 속도(충돌하여 회전력이 생기는 버그 방지)
+    }
+
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, moveVec * 5, Color.green);
+        isBorder = Physics.Raycast(transform.position, moveVec, 5, LayerMask.GetMask("Wall"));
+    }
+
+    void FixedUpdate()
+    {
+        FreezeRotation();
+        StopToWall();
     }
 
     void OnTriggerEnter(Collider other)
