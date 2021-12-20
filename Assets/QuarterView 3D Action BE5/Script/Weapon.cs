@@ -36,11 +36,11 @@ public class Weapon : MonoBehaviour
     {
         //yield return null;//1프레임 대기
 
-        yield return new WaitForSeconds(0.1f);//n초 대기
+        yield return new WaitForSeconds(0.2f);//n초 대기
         meleeArea.enabled = true;
         trailEffect.enabled = true;
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.3f);//n초 대기
         meleeArea.enabled = false;
 
         yield return new WaitForSeconds(0.3f);
