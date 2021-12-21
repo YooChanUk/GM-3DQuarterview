@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
         wDown = Input.GetButton("Walk");
         jDown = Input.GetButtonDown("Jump");
         fDown = Input.GetButton("Fire1");
-        gDown = Input.GetButton("Fire2");
+        gDown = Input.GetButtonDown("Fire2");
         rDown = Input.GetButtonDown("Reload");
         iDown = Input.GetButtonDown("Interation");
         sDown1 = Input.GetButtonDown("Swap1");
@@ -167,7 +167,7 @@ public class Player : MonoBehaviour
                 rigidGrenade.AddForce(nextVec, ForceMode.Impulse);
                 rigidGrenade.AddTorque(Vector3.back *10, ForceMode.Impulse);
 
-                hasGrenades--;
+                hasGrenades -= 1;
                 grenades[hasGrenades].SetActive(false);
             }
         }

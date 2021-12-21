@@ -6019,8 +6019,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2887d2e18feb8d4e9c3f861b2fc3084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
-  curHealth: 200
+  maxHealth: 100
+  curHealth: 100
 --- !u!54 &1213271815
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21928,6 +21928,7 @@ MonoBehaviour:
   - {fileID: 1717071789}
   - {fileID: 1152966501}
   hasGrenades: 0
+  grenadeObj: {fileID: 7163133134263181763, guid: 8c0a4821b3f3e5e46b94bfe9c02d75bc, type: 3}
   ammo: 100
   coin: 0
   health: 100
