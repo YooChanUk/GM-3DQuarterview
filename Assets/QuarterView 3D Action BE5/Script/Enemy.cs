@@ -1,21 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
     public int maxHealth;
     public int curHealth;
+    public Transform target;
+    public bool isChase;
 
     Rigidbody rigid;
     BoxCollider boxCollider;
     Material mat;
+    NavMeshAgent nav;//윈도우 --> AI에서 네비게이션 베이크할것(월드 또는 지형지물 스태틱 상태일것)
+    Animator anim;
 
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
-        mat = GetComponent<MeshRenderer>().material;
+        mat = GetComponentInChildren<MeshRenderer>().material;
+        nav = GetComponent<NavMeshAgent>();
+        anim = GetComponentInChildren<Animator>();
+
+        Invoke("ChaseStart",2);
+    }
+
+    void ChaseStart()
+    {
+        isChase = true;
+        anim.SetBool("isWalk",true);
+    }
+
+    void Update()
+    {
+        if (isChase)
+        {
+            nav.SetDestination(target.position);//플레이어를 따라가게 만드는 컴포넌트 사용
+        }
+        
+    }
+
+    void FreezeVelocity()
+    {
+        if (isChase)
+        {
+            rigid.velocity = Vector3.zero;//충돌시 이동로직 방해 못하게
+            rigid.angularVelocity = Vector3.zero;//충돌시 회전로직 방해 못하게
+        }
+    }
+
+    void FixedUpdate()
+    {
+        FreezeVelocity();//후처리
     }
 
     void OnTriggerEnter(Collider other)
@@ -57,8 +95,14 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+            
             mat.color = Color.grey;
             gameObject.layer = 12;
+            isChase = false;
+            nav.enabled = false;//네비가 켜진동안 Y축 상승을 하지 않음
+
+            anim.SetTrigger("doDie");
+            
 
             if (isGrenade)
             {
