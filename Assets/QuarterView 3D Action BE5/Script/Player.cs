@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     bool isFireReady = true;//공격준비 완료인지 검사하는 함수
     bool isReload; //장전중인지에 대해 검사하는 함수
     bool isBorder;
+    bool isDamage;//무적시간
 
 
     Vector3 moveVec;
@@ -50,6 +51,7 @@ public class Player : MonoBehaviour
 
     Animator anim;//자식관계에서 활동중 컴포넌트 차일드 활용
     Rigidbody rigid;
+    MeshRenderer[] meshs;//플레이어의 몸은 머리,팔,다리가 나뉘어있기에 배열로 가져와야함
 
     GameObject nearObject;//근처 오브젝트를 담는 변수
     Weapon equipWeapons;
@@ -61,6 +63,7 @@ public class Player : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
+        meshs = GetComponentsInChildren<MeshRenderer>();//복수물체를 가져올때는 겟컴포넌트s
     }
 
     void Update()
@@ -370,6 +373,39 @@ public class Player : MonoBehaviour
 
             Destroy(other.gameObject);
         }
+        else if (other.tag == "EnemyBullet")
+        {
+            if (!isDamage)
+            {
+                Bullet enemyBullet = other.GetComponent<Bullet>();
+                health -= enemyBullet.damage;
+                if (other.GetComponent<Rigidbody>() != null)
+                {
+                    Destroy(other.gameObject);
+                }
+                StartCoroutine(OnDamage());
+            }
+
+        }
+    }
+
+    IEnumerator OnDamage()
+    {
+        isDamage = true;
+
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.yellow;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        isDamage = false;
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.white;
+        }
+
     }
 
     void OnTriggerStay(Collider other)
