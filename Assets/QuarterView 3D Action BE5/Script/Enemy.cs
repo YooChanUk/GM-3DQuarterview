@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { A, B, C };
+    public enum Type { A, B, C, D };
     public Type enemyType;
     public int maxHealth;
     public int curHealth;
@@ -17,7 +17,7 @@ public class Enemy : MonoBehaviour
 
     Rigidbody rigid;
     BoxCollider boxCollider;
-    Material mat;
+    MeshRenderer[] meshs;
     NavMeshAgent nav;//윈도우 --> AI에서 네비게이션 베이크할것(월드 또는 지형지물 스태틱 상태일것)
     Animator anim;
 
@@ -25,11 +25,15 @@ public class Enemy : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
-        mat = GetComponentInChildren<MeshRenderer>().material;
+        meshs = GetComponentsInChildren<MeshRenderer>();
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponentInChildren<Animator>();
 
-        Invoke("ChaseStart",2);
+        if (enemyType != Type.D)
+        {
+            Invoke("ChaseStart", 2);
+        }
+        
     }
 
     void ChaseStart()
@@ -40,7 +44,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (nav.enabled)
+        if (nav.enabled && enemyType != Type.D)
         {
             nav.SetDestination(target.position);//플레이어를 따라가게 만드는 컴포넌트 사용
             nav.isStopped = !isChase;//쫓고있다면 멈추지않고 안쫓는다면 멈춘다.
@@ -67,36 +71,40 @@ public class Enemy : MonoBehaviour
 
     void Targeting()
     {
-        float targetRadius = 0;
-        float targetRange = 0;
-
-        switch (enemyType)
+        if (enemyType != Type.D)
         {
-            case Type.A:
-                targetRadius = 1.5f;
-                targetRange = 3f;
-                break;
+            float targetRadius = 0;
+            float targetRange = 0;
 
-            case Type.B:
-                targetRadius = 1f;
-                targetRange = 12f;
-                break;
+            switch (enemyType)
+            {
+                case Type.A:
+                    targetRadius = 1.5f;
+                    targetRange = 3f;
+                    break;
 
-            case Type.C:
-                targetRadius = 0.5f;
-                targetRange = 25f;
-                break;
+                case Type.B:
+                    targetRadius = 1f;
+                    targetRange = 12f;
+                    break;
+
+                case Type.C:
+                    targetRadius = 0.5f;
+                    targetRange = 25f;
+                    break;
+            }
+
+
+            RaycastHit[] rayHits =
+                Physics.SphereCastAll(transform.position, targetRadius, transform.forward,
+                                        targetRange, LayerMask.GetMask("Player"));
+
+            if (rayHits.Length > 0 && !isAttack)
+            {
+                StartCoroutine(Attack());
+            }
         }
-
-
-        RaycastHit[] rayHits =
-            Physics.SphereCastAll(transform.position, targetRadius, transform.forward,
-                                    targetRange, LayerMask.GetMask("Player"));
-
-        if (rayHits.Length > 0 && !isAttack)
-        {
-            StartCoroutine(Attack());
-        }
+        
     }
 
     IEnumerator Attack()
@@ -175,17 +183,27 @@ public class Enemy : MonoBehaviour
 
     IEnumerator OnDamage(Vector3 reactVec, bool isGrenade)
     {
-        mat.color = Color.red;
+        foreach (MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.red;
+        }
+        
         yield return new WaitForSeconds(0.1f);
 
         if (curHealth > 0)
         {
-            mat.color = Color.white;
+            foreach (MeshRenderer mesh in meshs)
+            {
+                mesh.material.color = Color.white;
+            }
         }
         else
         {
-            
-            mat.color = Color.grey;
+
+            foreach (MeshRenderer mesh in meshs)
+            {
+                mesh.material.color = Color.gray;
+            }
             gameObject.layer = 12;
             isChase = false;
             nav.enabled = false;//네비가 켜진동안 Y축 상승을 하지 않음
@@ -209,8 +227,11 @@ public class Enemy : MonoBehaviour
                 rigid.AddForce(reactVec * 5, ForceMode.Impulse);
             }
 
-
-            Destroy(gameObject,4);
+            if (enemyType != Type.D)
+            {
+                Destroy(gameObject, 4);
+            }
+            
         }
     }
 }
