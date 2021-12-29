@@ -13,13 +13,14 @@ public class Enemy : MonoBehaviour
     public bool isChase;
     public BoxCollider meleeArea;
     public bool isAttack;
+    public bool isDead;
     public GameObject bullet;
 
-    Rigidbody rigid;
-    BoxCollider boxCollider;
-    MeshRenderer[] meshs;
-    NavMeshAgent nav;//윈도우 --> AI에서 네비게이션 베이크할것(월드 또는 지형지물 스태틱 상태일것)
-    Animator anim;
+    public Rigidbody rigid;
+    public BoxCollider boxCollider;
+    public MeshRenderer[] meshs;
+    public NavMeshAgent nav;//윈도우 --> AI에서 네비게이션 베이크할것(월드 또는 지형지물 스태틱 상태일것)
+    public Animator anim;
 
     void Awake()
     {
@@ -71,7 +72,7 @@ public class Enemy : MonoBehaviour
 
     void Targeting()
     {
-        if (enemyType != Type.D)
+        if (!isDead && enemyType != Type.D)
         {
             float targetRadius = 0;
             float targetRange = 0;
@@ -206,6 +207,7 @@ public class Enemy : MonoBehaviour
             }
             gameObject.layer = 12;
             isChase = false;
+            isDead = true;
             nav.enabled = false;//네비가 켜진동안 Y축 상승을 하지 않음
 
             anim.SetTrigger("doDie");
