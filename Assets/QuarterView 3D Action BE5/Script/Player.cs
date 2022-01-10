@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public int ammo;
     public int coin;
     public int health;//아이템 소유확인
+    public int score;
     
 
     public int maxammo;
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour
     MeshRenderer[] meshs;//플레이어의 몸은 머리,팔,다리가 나뉘어있기에 배열로 가져와야함
 
     GameObject nearObject;//근처 오브젝트를 담는 변수
-    Weapon equipWeapons;
+    public Weapon equipWeapons;
 
     int equipWeaponIndex = -1;
     float fireDelay;
@@ -65,6 +66,9 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         meshs = GetComponentsInChildren<MeshRenderer>();//복수물체를 가져올때는 겟컴포넌트s
+
+        Debug.Log(PlayerPrefs.GetInt("MaxScore"));
+        //PlayerPrefs.SetInt("MaxScore", 112500);
     }
 
     void Update()
